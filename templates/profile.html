@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GMgram — Profil</title>
+<style>
+  :root{--bg:#0a0a0f;--card:#13131a;--neon:#c8ff47;--purple:#7b5cfa;--text:#e8e8f0;--sub:#888}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;padding-bottom:90px}
+  a{color:inherit;text-decoration:none}
+  nav{background:#0d0d14;border-bottom:1px solid #1e1e2e;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+  .logo{font-size:1.4rem;font-weight:800;color:var(--neon)}
+  .nav-links{display:flex;gap:10px;align-items:center}
+  .btn{padding:7px 18px;border-radius:20px;border:none;cursor:pointer;font-weight:600;font-size:.85rem;transition:.2s}
+  .btn-neon{background:var(--neon);color:#0a0a0f}
+  .btn-purple{background:var(--purple);color:#fff}
+  .btn-outline{background:transparent;border:1px solid var(--purple);color:var(--purple)}
+  .btn-outline:hover,.btn-outline.following{background:var(--purple);color:#fff}
+  .btn-danger{background:transparent;border:1px solid #c0392b;color:#e74c3c;padding:5px 12px;border-radius:14px;font-size:.78rem;cursor:pointer}
+  .container{max-width:680px;margin:0 auto;padding:16px}
+  .profile-header{background:var(--card);border-radius:16px;padding:24px;margin-bottom:16px;border:1px solid #1e1e2e;text-align:center}
+  .avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--purple),#3d2a8a);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 12px;overflow:hidden}
+  .avatar img{width:100%;height:100%;object-fit:cover}
+  .username{font-size:1.2rem;font-weight:800}
+  .bio{color:var(--sub);font-size:.85rem;margin-top:4px}
+  .stats{display:flex;gap:24px;justify-content:center;margin:16px 0}
+  .stat{text-align:center}
+  .stat-num{font-size:1.2rem;font-weight:800;color:var(--neon)}
+  .stat-label{font-size:.75rem;color:var(--sub)}
+  .tab-bar{display:flex;gap:0;margin-bottom:16px;background:var(--card);border-radius:12px;padding:4px;border:1px solid #1e1e2e}
+  .tab{flex:1;text-align:center;padding:9px;border-radius:10px;cursor:pointer;font-size:.85rem;font-weight:600;color:var(--sub);transition:.2s;border:none;background:transparent}
+  .tab.active{background:var(--purple);color:#fff}
+  .tab-content{display:none}
+  .tab-content.active{display:block}
+  .song-card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:14px;border:1px solid #1e1e2e;transition:.2s}
+  .song-card:hover{border-color:var(--purple)}
+  .song-cover{width:52px;height:52px;border-radius:9px;object-fit:cover;background:#1e1e2e;flex-shrink:0}
+  .song-cover-ph{width:52px;height:52px;border-radius:9px;background:linear-gradient(135deg,var(--purple),#3d2a8a);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+  .song-info{flex:1;min-width:0}
+  .song-title{font-weight:700;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .song-meta{color:var(--sub);font-size:.78rem;margin-top:2px}
+  .song-genre{background:#1e1e2e;color:var(--neon);font-size:.68rem;padding:2px 7px;border-radius:8px;display:inline-block;margin-top:3px}
+  .song-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  .play-btn{width:36px;height:36px;border-radius:50%;background:var(--purple);border:none;color:#fff;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .like-btn{background:transparent;border:none;font-size:1rem;cursor:pointer;padding:4px}
+  .like-btn.liked{filter:none}
+  .like-btn:not(.liked){filter:grayscale(1) opacity(.5)}
+  .pl-card{background:var(--card);border-radius:12px;padding:14px 16px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;border:1px solid #1e1e2e;transition:.2s}
+  .pl-card:hover{border-color:var(--purple)}
+  .pl-name{font-weight:700;font-size:.9rem}
+  .create-pl-form{background:var(--card);border-radius:14px;padding:18px;margin-bottom:14px;border:1px solid #1e1e2e}
+  .create-pl-form h4{font-size:.9rem;margin-bottom:12px;color:var(--neon)}
+  .form-row{display:flex;gap:8px}
+  input[type=text]{flex:1;background:#0d0d14;border:1px solid #2a2a3a;color:var(--text);padding:10px 14px;border-radius:10px;font-size:.85rem;outline:none}
+  input[type=text]:focus{border-color:var(--purple)}
+  .flash-msg{padding:10px 14px;border-radius:10px;margin-bottom:10px;font-size:.85rem}
+  .flash-success{background:#1a3a1a;border:1px solid #2d6a2d;color:#6fcf6f}
+  .flash-error{background:#3a1a1a;border:1px solid #6a2d2d;color:#cf6f6f}
+  .studio-form{background:var(--card);border-radius:14px;padding:20px;border:1px solid #1e1e2e}
+  .studio-form h4{font-size:.95rem;margin-bottom:14px;color:var(--neon)}
+  .form-group{margin-bottom:12px}
+  .form-group label{display:block;font-size:.8rem;color:var(--sub);margin-bottom:5px}
+  .form-group input,.form-group select{width:100%;background:#0d0d14;border:1px solid #2a2a3a;color:var(--text);padding:10px 14px;border-radius:10px;font-size:.85rem;outline:none}
+  .form-group input:focus,.form-group select:focus{border-color:var(--purple)}
+  .form-group select option{background:#0d0d14}
+  .empty-state{text-align:center;padding:32px;color:var(--sub);font-size:.9rem}
+  /* Mini Player */
+  .mini-player{position:fixed;bottom:0;left:0;right:0;background:#0d0d14;border-top:1px solid #1e1e2e;padding:10px 16px;display:none;align-items:center;gap:12px;z-index:150}
+  .mini-player.active{display:flex}
+  .mp-cover{width:44px;height:44px;border-radius:8px;object-fit:cover;background:#1e1e2e;flex-shrink:0}
+  .mp-title{font-weight:700;font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mp-artist{font-size:.75rem;color:var(--sub)}
+  .mp-controls{display:flex;align-items:center;gap:10px}
+  .mp-btn{background:transparent;border:none;color:var(--text);font-size:1.1rem;cursor:pointer}
+  .mp-play{width:36px;height:36px;border-radius:50%;background:var(--neon);color:#0a0a0f;border:none;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .mp-progress{width:100%;height:3px;background:#2a2a3a;border-radius:2px;margin-top:4px;cursor:pointer}
+  .mp-progress-bar{height:100%;background:var(--neon);border-radius:2px;width:0%}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="{{ url_for('index') }}" class="logo">🎵 GMgram</a>
+  <div class="nav-links">
+    {% if user %}
+      <a href="{{ url_for('studio') }}" class="btn btn-neon">+ Studio</a>
+      <a href="{{ url_for('playlists') }}">Pleylistlar</a>
+      <a href="{{ url_for('profile', uid=user.id) }}">{{ user.username }}</a>
+      <a href="{{ url_for('logout') }}">Chiqish</a>
+    {% else %}
+      <a href="{{ url_for('login') }}" class="btn btn-outline">Kirish</a>
+    {% endif %}
+  </div>
+</nav>
+
+<div class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for cat, msg in messages %}
+      <div class="flash-msg flash-{{ cat }}">{{ msg }}</div>
+    {% endfor %}
+  {% endwith %}
+
+  <div class="profile-header">
+    <div class="avatar">
+      {% if target.avatar_url %}<img src="/{{ target.avatar_url }}" alt="">{% else %}👤{% endif %}
+    </div>
+    <div class="username">{{ target.username }}</div>
+    <div class="bio">{{ target.bio or 'Bio yo\'q' }}</div>
+    <div class="stats">
+      <div class="stat"><div class="stat-num">{{ songs|length }}</div><div class="stat-label">Musiqalar</div></div>
+      <div class="stat"><div class="stat-num">{{ followers_count }}</div><div class="stat-label">Obunachilar</div></div>
+      <div class="stat"><div class="stat-num">{{ following_count }}</div><div class="stat-label">Obunalar</div></div>
+    </div>
+    {% if user and user.id != target.id %}
+      <form method="POST" action="{{ url_for('follow', uid=target.id) }}">
+        <button type="submit" class="btn btn-outline {{ 'following' if is_following else '' }}">
+          {{ 'Obunadan chiqish' if is_following else '+ Obuna bo\'lish' }}
+        </button>
+      </form>
+    {% endif %}
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab active" onclick="switchTab('songs',this)">🎵 Musiqalar</button>
+    <button class="tab" onclick="switchTab('playlists',this)">📋 Pleylistlar</button>
+    {% if user and user.id == target.id %}
+    <button class="tab" onclick="switchTab('studio',this)">🎙 Studio</button>
+    {% endif %}
+  </div>
+
+  <!-- Songs Tab -->
+  <div class="tab-content active" id="tab-songs">
+    {% if songs %}
+      {% for song in songs %}
+      <div class="song-card" id="song-{{ song.id }}">
+        {% if song.cover_url %}
+          <img class="song-cover" src="/{{ song.cover_url }}" alt="">
+        {% else %}
+          <div class="song-cover-ph">🎵</div>
+        {% endif %}
+        <div class="song-info">
+          <div class="song-title">{{ song.title }}</div>
+          <div class="song-meta">{{ song.artist }}</div>
+          <span class="song-genre">{{ song.genre }}</span>
+        </div>
+        <div class="song-actions">
+          <button class="play-btn" onclick="playSong({{ song.id }},'{{ song.title|e }}','{{ song.artist|e }}','/{{ song.audio_url }}','{% if song.cover_url %}/{{ song.cover_url }}{% endif %}')">▶</button>
+          {% if user %}
+          <button class="like-btn {{ 'liked' if song.liked else '' }}" id="like-btn-{{ song.id }}"
+            onclick="toggleLike({{ song.id }})">❤️</button>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state">🎵 Hali musiqa yuklanmagan</div>
+    {% endif %}
+  </div>
+
+  <!-- Playlists Tab -->
+  <div class="tab-content" id="tab-playlists">
+    {% if user and user.id == target.id %}
+    <div class="create-pl-form">
+      <h4>✚ Yangi pleylist yaratish</h4>
+      <form method="POST" action="{{ url_for('create_playlist') }}">
+        <div class="form-row">
+          <input type="text" name="name" placeholder="Pleylist nomi..." required>
+          <button type="submit" class="btn btn-purple">Yaratish</button>
+        </div>
+      </form>
+    </div>
+    {% endif %}
+    {% if playlists %}
+      {% for pl in playlists %}
+      <div class="pl-card">
+        <div>
+          <div class="pl-name">📋 {{ pl.name }}</div>
+        </div>
+        <a href="{{ url_for('playlist_detail', pl_id=pl.id) }}" class="btn btn-outline">Ko'rish</a>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state">📋 Hali pleylist yo'q</div>
+    {% endif %}
+  </div>
+
+  <!-- Studio Tab -->
+  {% if user and user.id == target.id %}
+  <div class="tab-content" id="tab-studio">
+    <div class="studio-form">
+      <h4>🎙 Yangi musiqa yuklash</h4>
+      <form method="POST" action="{{ url_for('studio') }}" enctype="multipart/form-data">
+        <div class="form-group">
+          <label>Sarlavha *</label>
+          <input type="text" name="title" placeholder="Musiqa nomi" required>
+        </div>
+        <div class="form-group">
+          <label>Ijrochi *</label>
+          <input type="text" name="artist" placeholder="Ijrochi ismi" required>
+        </div>
+        <div class="form-group">
+          <label>Janr *</label>
+          <select name="genre">
+            <option value="Pop">Pop</option>
+            <option value="Bass">Bass</option>
+            <option value="Remix">Remix</option>
+            <option value="Turkcha">Turkcha</option>
+            <option value="Hip-Hop">Hip-Hop</option>
+            <option value="Electronic">Electronic</option>
+            <option value="R&B">R&B</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Audio fayl (.mp3) *</label>
+          <input type="file" name="audio_file" accept=".mp3,.wav,.ogg" required>
+        </div>
+        <div class="form-group">
+          <label>Muqova rasm (ixtiyoriy)</label>
+          <input type="file" name="cover_file" accept=".jpg,.jpeg,.png,.webp">
+        </div>
+        <button type="submit" class="btn btn-neon" style="width:100%;padding:12px;font-size:.95rem;border-radius:12px">🎵 Yuklash</button>
+      </form>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Mini Player -->
+<div class="mini-player" id="miniPlayer">
+  <img class="mp-cover" id="mpCover" src="" alt="">
+  <div style="flex:1;min-width:0">
+    <div class="mp-title" id="mpTitle">—</div>
+    <div class="mp-artist" id="mpArtist">—</div>
+    <div class="mp-progress" onclick="seekAudio(event)">
+      <div class="mp-progress-bar" id="mpBar"></div>
+    </div>
+  </div>
+  <div class="mp-controls">
+    <button class="mp-btn" onclick="skipAudio(-10)">⏪</button>
+    <button class="mp-play" id="mpPlayBtn" onclick="togglePlay()">▶</button>
+    <button class="mp-btn" onclick="skipAudio(10)">⏩</button>
+  </div>
+</div>
+<audio id="globalAudio"></audio>
+
+<script>
+function switchTab(name, el) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  el.classList.add('active');
+}
+
+const audio = document.getElementById('globalAudio');
+const miniPlayer = document.getElementById('miniPlayer');
+
+function playSong(id, title, artist, url, cover) {
+  audio.src = url;
+  audio.play();
+  document.getElementById('mpTitle').textContent = title;
+  document.getElementById('mpArtist').textContent = artist;
+  const c = document.getElementById('mpCover');
+  c.src = cover || ''; c.style.display = cover ? 'block' : 'none';
+  miniPlayer.classList.add('active');
+  document.getElementById('mpPlayBtn').textContent = '⏸';
+  fetch('/api/songs/' + id + '/play', {method:'POST'});
+}
+
+function togglePlay() {
+  if (audio.paused) { audio.play(); document.getElementById('mpPlayBtn').textContent = '⏸'; }
+  else { audio.pause(); document.getElementById('mpPlayBtn').textContent = '▶'; }
+}
+
+function skipAudio(s) { audio.currentTime = Math.max(0, audio.currentTime + s); }
+
+function seekAudio(e) {
+  if (!audio.duration) return;
+  const r = e.currentTarget.getBoundingClientRect();
+  audio.currentTime = ((e.clientX - r.left) / r.width) * audio.duration;
+}
+
+audio.addEventListener('timeupdate', () => {
+  if (!audio.duration) return;
+  document.getElementById('mpBar').style.width = (audio.currentTime / audio.duration * 100) + '%';
+});
+
+function toggleLike(id) {
+  fetch('/api/songs/' + id + '/like', {method:'POST'})
+    .then(r => r.json()).then(data => {
+      if (data.error) return;
+      const btn = document.getElementById('like-btn-' + id);
+      if (btn) btn.classList.toggle('liked', data.liked);
+    });
+}
+</script>
+</body>
+</html>
